@@ -51,6 +51,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvUsername;
         TextView tvHandle;
         TextView tvBody;
+        TextView tvTimestamp;
         ImageView ivProfilepic;
 
         public ViewHolder(@NonNull @NotNull View itemView) {
@@ -59,6 +60,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvHandle = itemView.findViewById(R.id.tvHandle);
             tvBody = itemView.findViewById(R.id.tvBody);
             ivProfilepic = itemView.findViewById(R.id.ivProfilepic);
+            tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
         }
 
         public void bind(Tweet tweet) {
@@ -69,6 +71,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                     .load(tweet.user.ivProfileUrl)
                     .circleCrop()
                     .into(ivProfilepic);
+            tvTimestamp.setText("- " + Tweet.getRelativeTimeAgo(tweet.createdAt));
         }
     }
 }
