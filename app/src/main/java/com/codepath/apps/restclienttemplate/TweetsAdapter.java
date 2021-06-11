@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
 import org.jetbrains.annotations.NotNull;
@@ -63,6 +64,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvBody;
         TextView tvTimestamp;
         ImageView ivProfilepic;
+        ImageView ivUrl;
 
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
@@ -71,6 +73,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvBody = itemView.findViewById(R.id.tvBody);
             ivProfilepic = itemView.findViewById(R.id.ivProfilepic);
             tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
+            ivUrl = itemView.findViewById(R.id.ivUrl);
         }
 
         public void bind(Tweet tweet) {
@@ -82,6 +85,15 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                     .circleCrop()
                     .into(ivProfilepic);
             tvTimestamp.setText("- " + Tweet.getRelativeTimeAgo(tweet.createdAt));
+
+            if(tweet.mediaUrl != ""){
+                int radius = 30;
+                int margin = 10;
+                Glide.with(context)
+                        .load(tweet.mediaUrl)
+                        .transform(new RoundedCorners(30))
+                        .into(ivUrl);
+            }
         }
     }
 }
