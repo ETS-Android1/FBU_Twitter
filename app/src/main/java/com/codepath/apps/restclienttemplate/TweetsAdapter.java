@@ -2,9 +2,11 @@ package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -69,6 +71,9 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvTimestamp;
         ImageView ivProfilepic;
         ImageView ivUrl;
+        ImageButton ibRetweet;
+        ImageButton ibLike;
+        ImageButton ibReply;
 
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
@@ -79,6 +84,9 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             ivProfilepic = itemView.findViewById(R.id.ivProfilepic);
             tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
             ivUrl = itemView.findViewById(R.id.ivUrl);
+            ibRetweet = itemView.findViewById(R.id.ibRetweet);
+            ibLike = itemView.findViewById(R.id.ibLike);
+            ibReply = itemView.findViewById(R.id.ibReply);
         }
 
         public void bind(final Tweet tweet) {
@@ -109,6 +117,25 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                     context.startActivity(i);
                 }
             });
+
+            ibReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(context, ComposeActivity.class);
+                    i.putExtra("Tweet", Parcels.wrap(tweet));
+                    context.startActivity(i);
+                }
+            });
+
+            if(tweet.retweetStatus == true){
+                ibRetweet.setImageResource(R.drawable.ic_vector_retweet);
+                ibRetweet.getDrawable().setTint(Color.RED);
+            }
+
+            if(tweet.favoriteStatus == true){
+                ibLike.setImageResource(R.drawable.ic_vector_heart);
+                ibLike.getDrawable().setTint(Color.RED);
+            }
         }
     }
 }

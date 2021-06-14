@@ -81,4 +81,40 @@
         android:layout_marginBottom="15dp"
         android:layout_toEndOf="@+id/ivProfilepic"
         tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageButton
+        android:id="@+id/ibLike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivUrl"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="3dp"
+        android:layout_toEndOf="@+id/ibRetweet"
+        android:backgroundTint="#00FFFFFF"
+        android:tint="@color/button_color"
+        app:srcCompat="@drawable/ic_vector_heart_stroke" />
+
+    <ImageButton
+        android:id="@+id/ibRetweet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivUrl"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="3dp"
+        android:layout_toEndOf="@+id/ibReply"
+        android:backgroundTint="#00FFFFFF"
+        android:tint="@color/button_color"
+        app:srcCompat="@drawable/ic_vector_retweet_stroke" />
+
+    <ImageButton
+        android:id="@+id/ibReply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivUrl"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="3dp"
+        android:backgroundTint="#00FFFFFF"
+        android:tint="@color/button_color"
+        app:srcCompat="@android:drawable/sym_action_chat" />
+
 </RelativeLayout>

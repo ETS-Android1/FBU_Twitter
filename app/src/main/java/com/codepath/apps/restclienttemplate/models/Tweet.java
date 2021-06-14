@@ -28,6 +28,8 @@ public class Tweet {
     public long id;
     public int retweets;
     public int favorites;
+    public boolean favoriteStatus;
+    public boolean retweetStatus;
 
     public Tweet(){
 
@@ -40,7 +42,9 @@ public class Tweet {
         tweet.user = User.fromJsonObject(object.getJSONObject("user"));
         tweet.id = object.getLong("id");
         tweet.retweets = object.getInt("retweet_count");
+        tweet.retweetStatus = object.getBoolean("retweeted");
         tweet.favorites = object.getInt("favorite_count");
+        tweet.favoriteStatus = object.getBoolean("favorited");
 
         if(!object.isNull("extended_entities")){
             JSONObject extendedEntitites = object.getJSONObject("extended_entities");

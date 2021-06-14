@@ -25,6 +25,7 @@ public class ComposeActivity extends AppCompatActivity {
     EditText etCompose;
     Button btTweet;
     TwitterClient client;
+    Tweet tweet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +33,13 @@ public class ComposeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_compose);
 
         etCompose = findViewById(R.id.etCompose);
+        tweet = Parcels.unwrap(getIntent().getParcelableExtra("Tweet"));
+        if(tweet != null){
+            etCompose.setText("@" + tweet.user.handle);
+        }
+
         btTweet = findViewById(R.id.btTweet);
         client = TwitterApp.getRestClient(this);
-
         btTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -47,27 +52,51 @@ public class ComposeActivity extends AppCompatActivity {
                     return;
                 }
 
-                client.publishTweet(etCompose.getText().toString(), new JsonHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Headers headers, JSON json) {
-                        Log.i(TAG, "onSuccess to publish tweet");
-                        try {
-                            Tweet tweet = Tweet.fromJsonObject(json.jsonObject);
-                            Intent i = new Intent();
-                            i.putExtra("NEW_TWEET", Parcels.wrap(tweet));
-                            setResult(RESULT_OK);
-                            finish();
-                            Log.i(TAG, "Published tweet says: " + tweet.body);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                if(tweet == null) {
+                    client.publishTweet(etCompose.getText().toString(), new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            Log.i(TAG, "onSuccess to publish tweet");
+                            try {
+                                Tweet tweet = Tweet.fromJsonObject(json.jsonObject);
+                                Intent i = new Intent();
+                                i.putExtra("NEW_TWEET", Parcels.wrap(tweet));
+                                setResult(RESULT_OK);
+                                finish();
+                                Log.i(TAG, "Published tweet says: " + tweet.body);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                        Log.e(TAG, "OnFailure: " + throwable.getMessage());
-                    }
-                });
+                        @Override
+                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                            Log.e(TAG, "OnFailure: " + throwable.getMessage());
+                        }
+                    });
+                }else{
+                    client.replyTo(tweet.id, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            Log.i(TAG, "onSuccess to reply tweet");
+                            try {
+                                Tweet tweet = Tweet.fromJsonObject(json.jsonObject);
+                                Intent i = new Intent();
+                                i.putExtra("NEW_TWEET", Parcels.wrap(tweet));
+                                setResult(RESULT_OK);
+                                finish();
+                                Log.i(TAG, "Published tweet says: " + tweet.body);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                            Log.e(TAG, "Failed to reply: " + throwable.getMessage());
+                        }
+                    }, etCompose.getText().toString());
+                }
             }
         });
     }

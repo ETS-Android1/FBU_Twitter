@@ -80,7 +80,7 @@ public class HomeFragment extends Fragment {
         rvTweets.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
         rvTweets.addOnScrollListener(scrollListener);
 
-        //populateTimeline();
+        populateTimeline();
     }
 
     private void loadNextDataFromApi(int page) {
