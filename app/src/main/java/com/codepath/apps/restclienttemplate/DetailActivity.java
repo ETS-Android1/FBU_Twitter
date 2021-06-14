@@ -1,5 +1,6 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,11 +13,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.parceler.Parcels;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import okhttp3.Headers;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -52,12 +56,45 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(tweet.favoriteStatus == true){
-                    //client.unFavoriteTweet();
-                }else {
+                    client.unFavoriteTweet(tweet.id, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            Log.d(TAG, "Unfavorited tweet onSuccess");
+                            tweet.favoriteStatus = false;
+                            Integer numFavorites;
+                            String [] split = tvFavorites.getText().toString().split(" ");
+                            numFavorites = Integer.valueOf(split[0]);
+                            tvFavorites.setText(String.format("%d Likes", numFavorites - 1));
+                            changeButtons();
+                        }
 
+                        @Override
+                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                            Log.d(TAG, "OnFailure to unfavorite: " + throwable.getMessage());
+                        }
+                    });
+                }else {
+                    client.favoriteTweet(tweet.id, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            Log.d(TAG, "Favorited Tweet onSuccess");
+                            tweet.favoriteStatus = true;
+                            Integer numFavorites;
+                            String [] split = tvFavorites.getText().toString().split(" ");
+                            numFavorites = Integer.valueOf(split[0]);
+                            tvFavorites.setText(String.format("%d Likes", numFavorites + 1));
+                            changeButtons();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                            Log.d(TAG, "Favorited Tweet OnFailure: " + throwable.getMessage());
+                        }
+                    });
                 }
             }
         });
+
         ibRetweet = findViewById(R.id.ibRetweet);
 
         tweet = Parcels.unwrap(getIntent().getParcelableExtra("Tweet"));
@@ -78,12 +115,16 @@ public class DetailActivity extends AppCompatActivity {
         tvRetweets.setText(String.format("%d Retweets", tweet.retweets));
         tvFavorites.setText(String.format("%d Likes", tweet.favorites));
 
+        changeButtons();
+    }
+
+    public void changeButtons(){
         if(tweet.retweetStatus == true){
             ibRetweet.setImageResource(R.drawable.ic_vector_retweet);
             ibRetweet.getDrawable().setTint(Color.RED);
         }else {
             ibRetweet.setImageResource(R.drawable.ic_vector_retweet_stroke);
-            ibRetweet.getDrawable().setTint(Integer.parseInt("#FF676767"));
+            ibRetweet.getDrawable().setTint(Color.GRAY);
         }
 
         if(tweet.favoriteStatus == true){
@@ -92,7 +133,7 @@ public class DetailActivity extends AppCompatActivity {
         }
         else{
             ibFavorite.setImageResource(R.drawable.ic_vector_heart_stroke);
-            ibFavorite.getDrawable().setTint(Integer.parseInt("#FF676767"));
+            ibFavorite.getDrawable().setTint(Color.GRAY);
         }
     }
 
