@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.parceler.Parcels;
 
@@ -34,11 +36,19 @@ public class TimelineActivity extends AppCompatActivity {
     RecyclerView rvTweets;
     TwitterClient client;
     TweetsAdapter adapter;
+    EndlessRecyclerViewScrollListener scrollListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("");
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setIcon(R.drawable.ic_twitter_bird);
+        actionBar.setDisplayUseLogoEnabled(true);
 
         rvTweets = findViewById(R.id.rvTweets);
         swipeContainer = findViewById(R.id.swipeContainer);
@@ -53,12 +63,43 @@ public class TimelineActivity extends AppCompatActivity {
         client = new TwitterClient(this);
         tweets = new ArrayList<>();
 
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                Log.d(TAG, "OnLoadMore:");
+                loadNextDataFromApi(page);
+            }
+        };
+
         adapter = new TweetsAdapter(this, tweets);
-        rvTweets.setLayoutManager(new LinearLayoutManager(this));
+        rvTweets.setLayoutManager(layoutManager);
         rvTweets.setAdapter(adapter);
         rvTweets.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        rvTweets.addOnScrollListener(scrollListener);
 
         populateTimeline();
+    }
+
+    private void loadNextDataFromApi(int page) {
+        // Send an API request to retrieve appropriate paginated data
+        client.getNextPageOfTweets(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                //  --> Deserialize and construct new model objects from the API response
+                JSONArray jsonArray = json.jsonArray;
+                try{
+                    List<Tweet> tweets = Tweet.fromJsonArray(jsonArray);
+                    adapter.addAll(tweets);
+                }catch(JSONException e){
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.e(TAG, "onFailure: " + throwable.getMessage());
+            }
+        }, tweets.get(tweets.size() - 1).id);
     }
 
     @Override

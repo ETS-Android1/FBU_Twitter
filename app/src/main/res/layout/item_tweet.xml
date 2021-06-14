@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#FF151515">
+    android:background="@android:color/white">
 
     <ImageView
         android:id="@+id/ivProfilepic"
@@ -42,7 +42,7 @@
         tools:layout_editor_absoluteX="284dp"
         tools:layout_editor_absoluteY="91dp"
         tools:text="This is a test body tweet!"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/black"/>
 
     <TextView
         android:id="@+id/tvUsername"
@@ -51,7 +51,7 @@
         android:layout_marginStart="7dp"
         android:layout_marginTop="5dp"
         android:layout_toEndOf="@+id/ivProfilepic"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:textStyle="bold"
         tools:layout_editor_absoluteX="270dp"
         tools:layout_editor_absoluteY="155dp"

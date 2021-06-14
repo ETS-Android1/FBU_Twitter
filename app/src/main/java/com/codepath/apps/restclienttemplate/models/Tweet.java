@@ -25,6 +25,7 @@ public class Tweet {
     public String createdAt;
     public User user;
     public String mediaUrl;
+    public long id;
 
     public Tweet(){
 
@@ -35,6 +36,7 @@ public class Tweet {
         tweet.body = object.getString("text");
         tweet.createdAt = object.getString("created_at");
         tweet.user = User.fromJsonObject(object.getJSONObject("user"));
+        tweet.id = object.getLong("id");
 
         if(!object.isNull("extended_entities")){
             JSONObject extendedEntitites = object.getJSONObject("extended_entities");
