@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Focused and not pressed -->
+    <item android:state_focused="true"
+        android:state_pressed="false"
+        android:color="#ff1da1f2"
+        app:tint="#ff1da1f2"/>
+
+    <!-- Focused and pressed -->
+    <item android:state_focused="true"
+        android:state_pressed="true"
+        android:color="#ff1da1f2"
+        app:tint="#ff1da1f2"/>
+
+    <!-- Unfocused and pressed -->
+    <item android:state_focused="false"
+        android:state_pressed="true"
+        android:color="#ff1da1f2"
+        app:tint="#ff1da1f2" />
+
+    <!-- Default color -->
+    <item android:color="#000000" />
+</selector>

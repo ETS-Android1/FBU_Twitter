@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_home"
+        android:icon="@drawable/ic_home_selector"
+        android:title="Home"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_vector_search_stroke"
+        android:title="Search"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_notifications"
+        android:icon="@drawable/ic_vector_notifications_stroke"
+        android:title="Notifications"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_direct_messages"
+        android:icon="@drawable/ic_vector_messages_stroke"
+        android:title="Notifications"
+        app:showAsAction="always" />
+
+</menu>

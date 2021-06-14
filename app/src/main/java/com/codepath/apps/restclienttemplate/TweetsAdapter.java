@@ -97,6 +97,9 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                         .transform(new RoundedCorners(30))
                         .into(ivUrl);
             }
+            else{
+                ivUrl.setVisibility(View.GONE);
+            }
 
             container.setOnClickListener(new View.OnClickListener() {
                 @Override
