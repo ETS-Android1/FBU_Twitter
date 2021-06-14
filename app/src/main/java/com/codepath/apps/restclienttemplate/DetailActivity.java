@@ -12,6 +12,9 @@ import com.codepath.apps.restclienttemplate.models.Tweet;
 
 import org.parceler.Parcels;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class DetailActivity extends AppCompatActivity {
 
     public static final String TAG = "DetailActivity";
@@ -20,6 +23,8 @@ public class DetailActivity extends AppCompatActivity {
     TextView tvHandle;
     TextView tvBody;
     TextView tvDate;
+    TextView tvRetweets;
+    TextView tvFavorites;
     ImageView ivProfile;
 
     @Override
@@ -32,6 +37,8 @@ public class DetailActivity extends AppCompatActivity {
         tvUsername = findViewById(R.id.tvUsername);
         tvDate = findViewById(R.id.tvDate);
         ivProfile = findViewById(R.id.ivProfile);
+        tvRetweets = findViewById(R.id.tvRetweets);
+        tvFavorites = findViewById(R.id.tvLikes);
 
         tweet = Parcels.unwrap(getIntent().getParcelableExtra("Tweet"));
         Log.d(TAG, "Tweet ID: " + tweet.id);
@@ -47,6 +54,18 @@ public class DetailActivity extends AppCompatActivity {
                 .into(ivProfile);
 
         tvBody.setText(tweet.body);
-        tvDate.setText(Tweet.getRelativeTimeAgo(tweet.createdAt));
+        tvDate.setText(formattedDate(tweet.createdAt));
+        tvRetweets.setText(String.format("%d Retweets", tweet.retweets));
+        tvFavorites.setText(String.format("%d Likes", tweet.favorites));
+    }
+
+    private String formattedDate(String rawDate){
+        StringBuilder result = new StringBuilder();
+        SimpleDateFormat formatter = new SimpleDateFormat("hh:mm a");
+        Date date = new Date(rawDate);
+        result.append(formatter.format(date));
+        formatter = new SimpleDateFormat("MM/dd/YYYY");
+        result.append(" - " + formatter.format(date));
+        return result.toString();
     }
 }

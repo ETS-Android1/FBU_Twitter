@@ -92,8 +92,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvTimestamp.setText("- " + Tweet.getRelativeTimeAgo(tweet.createdAt));
 
             if(tweet.mediaUrl != ""){
-                int radius = 30;
-                int margin = 10;
                 Glide.with(context)
                         .load(tweet.mediaUrl)
                         .transform(new RoundedCorners(30))

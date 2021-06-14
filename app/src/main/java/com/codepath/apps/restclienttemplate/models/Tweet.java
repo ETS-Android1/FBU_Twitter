@@ -26,6 +26,8 @@ public class Tweet {
     public User user;
     public String mediaUrl;
     public long id;
+    public int retweets;
+    public int favorites;
 
     public Tweet(){
 
@@ -37,6 +39,8 @@ public class Tweet {
         tweet.createdAt = object.getString("created_at");
         tweet.user = User.fromJsonObject(object.getJSONObject("user"));
         tweet.id = object.getLong("id");
+        tweet.retweets = object.getInt("retweet_count");
+        tweet.favorites = object.getInt("favorite_count");
 
         if(!object.isNull("extended_entities")){
             JSONObject extendedEntitites = object.getJSONObject("extended_entities");
