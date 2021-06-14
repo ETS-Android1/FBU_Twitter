@@ -1,10 +1,12 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +17,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
 import org.jetbrains.annotations.NotNull;
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -59,6 +62,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
+        RelativeLayout container;
         TextView tvUsername;
         TextView tvHandle;
         TextView tvBody;
@@ -68,6 +72,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
+            container = itemView.findViewById(R.id.container);
             tvUsername = itemView.findViewById(R.id.tvUsername);
             tvHandle = itemView.findViewById(R.id.tvHandle);
             tvBody = itemView.findViewById(R.id.tvBody);
@@ -76,7 +81,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             ivUrl = itemView.findViewById(R.id.ivUrl);
         }
 
-        public void bind(Tweet tweet) {
+        public void bind(final Tweet tweet) {
             tvUsername.setText(tweet.user.username);
             tvBody.setText(tweet.body);
             tvHandle.setText("@" + tweet.user.handle);
@@ -94,6 +99,15 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                         .transform(new RoundedCorners(30))
                         .into(ivUrl);
             }
+
+            container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(context, DetailActivity.class);
+                    i.putExtra("Tweet", Parcels.wrap(tweet));
+                    context.startActivity(i);
+                }
+            });
         }
     }
 }
