@@ -20,6 +20,7 @@ import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.TimelineActivity;
 import com.codepath.apps.restclienttemplate.TweetsAdapter;
 import com.codepath.apps.restclienttemplate.TwitterClient;
+import com.codepath.apps.restclienttemplate.databinding.FragmentHomeBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
@@ -53,8 +54,9 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        rvTweets = view.findViewById(R.id.rvTweets);
-        swipeContainer = view.findViewById(R.id.swipeContainer);
+        FragmentHomeBinding binding = FragmentHomeBinding.inflate(getLayoutInflater());
+        rvTweets = binding.rvTweets;
+        swipeContainer = binding.swipeContainer;
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
