@@ -15,7 +15,8 @@
         android:layout_marginTop="8dp"
         tools:layout_editor_absoluteX="21dp"
         tools:layout_editor_absoluteY="24dp"
-        tools:srcCompat="@tools:sample/avatars" />
+        tools:srcCompat="@tools:sample/avatars"
+        />
 
     <TextView
         android:id="@+id/tvHandle"
@@ -48,7 +49,9 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
         android:textSize="34sp"
-        tools:text="This is an example body of a tweet!" />
+        tools:text="This is an example body of a tweet!"
+        android:autoLink="all"
+        android:linksClickable="true"/>
 
     <TextView
         android:id="@+id/tvDate"

@@ -43,7 +43,9 @@
         tools:layout_editor_absoluteX="284dp"
         tools:layout_editor_absoluteY="91dp"
         tools:text="This is a test body tweet!"
-        android:textColor="@android:color/black"/>
+        android:textColor="@android:color/black"
+        android:autoLink="all"
+        android:linksClickable="true"/>
 
     <TextView
         android:id="@+id/tvUsername"
