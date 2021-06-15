@@ -5,12 +5,11 @@
         android:state_pressed="true"
         android:state_enabled="true"
         android:drawable="@drawable/ic_vector_home"
-        android:color="@color/home_color_selector"/>
+        />
     <item
         android:state_selected="true"
         android:state_enabled="true"
-        android:drawable="@drawable/ic_vector_home"
-        android:color="@color/home_color_selector"/>
+        android:drawable="@drawable/ic_vector_home"/>
 
     <item
         android:state_enabled="true"
