@@ -17,6 +17,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.codepath.apps.restclienttemplate.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.restclienttemplate.R;
+import com.codepath.apps.restclienttemplate.TimelineActivity;
 import com.codepath.apps.restclienttemplate.TweetsAdapter;
 import com.codepath.apps.restclienttemplate.TwitterClient;
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -91,11 +92,13 @@ public class HomeFragment extends Fragment {
                 //  --> Deserialize and construct new model objects from the API response
                 JSONArray jsonArray = json.jsonArray;
                 try{
+                    TimelineActivity.showProgressBar();
                     List<Tweet> tweets = Tweet.fromJsonArray(jsonArray);
                     adapter.addAll(tweets);
                 }catch(JSONException e){
                     e.printStackTrace();
                 }
+                TimelineActivity.hideProgressBar();
             }
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
@@ -121,11 +124,13 @@ public class HomeFragment extends Fragment {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 try {
+                    TimelineActivity.showProgressBar();
                     tweets.addAll(Tweet.fromJsonArray(json.jsonArray));
                     adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                TimelineActivity.hideProgressBar();
             }
 
             @Override
@@ -153,5 +158,4 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-
 }
