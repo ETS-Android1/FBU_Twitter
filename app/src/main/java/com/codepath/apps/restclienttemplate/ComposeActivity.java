@@ -5,10 +5,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.codepath.apps.restclienttemplate.databinding.ActivityComposeBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
@@ -21,37 +22,38 @@ public class ComposeActivity extends AppCompatActivity {
 
     public static final String TAG = "ComposeActivity";
     public static final int MAX_TWEET_LENGTH = 140;
+    EditText etCompose;
+    Button btTweet;
     TwitterClient client;
     Tweet tweet;
-    ActivityComposeBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose);
 
-        binding = ActivityComposeBinding.inflate(getLayoutInflater());
-
+        etCompose = findViewById(R.id.etCompose);
         tweet = Parcels.unwrap(getIntent().getParcelableExtra("Tweet"));
         if(tweet != null){
-            binding.etCompose.setText("@" + tweet.user.handle);
+            etCompose.setText("@" + tweet.user.handle);
         }
 
+        btTweet = findViewById(R.id.btTweet);
         client = TwitterApp.getRestClient(this);
-        binding.btTweet.setOnClickListener(new View.OnClickListener() {
+        btTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(TextUtils.isEmpty(binding.etCompose.getText())){
-                    binding.etCompose.setError("Cannot be empty!");
+                if(TextUtils.isEmpty(etCompose.getText())){
+                    etCompose.setError("Cannot be empty!");
                     return;
                 }
-                if(binding.etCompose.getText().length() > MAX_TWEET_LENGTH){
-                    binding.etCompose.setError("Tweet is too long!");
+                if(etCompose.getText().length() > MAX_TWEET_LENGTH){
+                    etCompose.setError("Tweet is too long!");
                     return;
                 }
 
                 if(tweet == null) {
-                    client.publishTweet(binding.etCompose.getText().toString(), new JsonHttpResponseHandler() {
+                    client.publishTweet(etCompose.getText().toString(), new JsonHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Headers headers, JSON json) {
                             Log.i(TAG, "onSuccess to publish tweet");
@@ -93,7 +95,7 @@ public class ComposeActivity extends AppCompatActivity {
                         public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                             Log.e(TAG, "Failed to reply: " + throwable.getMessage());
                         }
-                    }, binding.etCompose.getText().toString());
+                    }, etCompose.getText().toString());
                 }
             }
         });

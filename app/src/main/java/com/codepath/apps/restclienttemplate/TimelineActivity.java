@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.codepath.apps.restclienttemplate.databinding.ActivityTimelineBinding;
 import com.codepath.apps.restclienttemplate.fragments.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -37,10 +36,9 @@ public class TimelineActivity extends AppCompatActivity {
         actionBar.setIcon(R.drawable.ic_twitter_bird);
         actionBar.setDisplayUseLogoEnabled(true);
 
-        ActivityTimelineBinding binding = ActivityTimelineBinding.inflate(getLayoutInflater());
         miActionProgressItem = findViewById(R.id.miActionProgress);
-        bottomNavigationView = binding.bottomNavigation;
 
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setBackgroundColor(Color.TRANSPARENT);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
