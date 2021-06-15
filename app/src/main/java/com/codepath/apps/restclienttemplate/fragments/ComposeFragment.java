@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.NewTweetListener;
 import com.codepath.apps.restclienttemplate.R;
 
@@ -27,6 +29,19 @@ public class ComposeFragment extends DialogFragment implements NewTweetListener 
 
     public ComposeFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onResume() {
+
+        // Get existing layout params for the window
+        ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
+        // Assign window properties to fill the parent
+        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        params.height = WindowManager.LayoutParams.MATCH_PARENT;
+        getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
+
+        super.onResume();
     }
 
     @Override
@@ -57,6 +72,11 @@ public class ComposeFragment extends DialogFragment implements NewTweetListener 
         btCancel = view.findViewById(R.id.btCancel);
         ivProfile = view.findViewById(R.id.ivProfile);
         etCompose.requestFocus();
+
+        Glide.with(this)
+                .load(ivProfile.getDrawable())
+                .circleCrop()
+                .into(ivProfile);
 
         btCancel.setOnClickListener(new View.OnClickListener() {
             @Override

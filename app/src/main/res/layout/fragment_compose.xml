@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:theme="@style/AppDialogTheme"
     tools:context=".ComposeActivity">
 
     <ImageView
@@ -12,6 +13,7 @@
         android:layout_height="84dp"
         android:layout_margin="7dp"
         android:layout_weight="1"
+        android:src="@drawable/ic_vector_person"
         tools:src="@tools:sample/avatars" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -54,10 +56,10 @@
         android:layout_width="wrap_content"
         android:layout_height="33dp"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="25dp"
         android:background="@drawable/rounded_corners"
-        android:backgroundTint="@color/twitter_blue"
+        android:backgroundTint="#B5F30000"
         android:text="@android:string/cancel"
         android:textColor="@android:color/white" />
 
