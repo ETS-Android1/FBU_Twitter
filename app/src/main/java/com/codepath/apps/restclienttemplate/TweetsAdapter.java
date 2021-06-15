@@ -95,7 +95,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvHandle.setText("@" + tweet.user.handle);
             Glide.with(context)
                     .load(tweet.user.ivProfileUrl)
-                    .circleCrop()
+                    .fitCenter()
+                    .override(250, 130)
                     .into(ivProfilepic);
             tvTimestamp.setText("- " + Tweet.getRelativeTimeAgo(tweet.createdAt));
 

@@ -73,15 +73,16 @@
     <ImageView
         android:id="@+id/ivUrl"
         android:layout_width="250dp"
-        android:layout_height="100dp"
+        android:layout_height="130dp"
         android:layout_below="@+id/tvBody"
         android:layout_alignParentEnd="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="50dp"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="5dp"
-        android:layout_marginEnd="38dp"
+        android:layout_marginEnd="81dp"
         android:layout_marginBottom="15dp"
         android:layout_toEndOf="@+id/ivProfilepic"
+        android:scaleType="fitXY"
         tools:srcCompat="@tools:sample/avatars" />
 
     <ImageButton

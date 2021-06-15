@@ -10,18 +10,21 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.codepath.apps.restclienttemplate.EndlessRecyclerViewScrollListener;
+import com.codepath.apps.restclienttemplate.NewTweetListener;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.TimelineActivity;
 import com.codepath.apps.restclienttemplate.TweetsAdapter;
 import com.codepath.apps.restclienttemplate.TwitterClient;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +37,7 @@ import okhttp3.Headers;
 
 import static android.app.Activity.RESULT_OK;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements NewTweetListener {
 
     public static final String TAG = "HomeFragment";
     public static final int COMPOSE_REQUEST = 55;
@@ -44,6 +47,7 @@ public class HomeFragment extends Fragment {
     TwitterClient client;
     TweetsAdapter adapter;
     EndlessRecyclerViewScrollListener scrollListener;
+    FloatingActionButton fabCompose;
 
     @Nullable
     @Override
@@ -51,15 +55,27 @@ public class HomeFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
         rvTweets = view.findViewById(R.id.rvTweets);
         swipeContainer = view.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 fetchTimelineAsync(0);
-                //swipeContainer.setRefreshing(false);
+            }
+        });
+
+        fabCompose = view.findViewById(R.id.fabCompose);
+        fabCompose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = getFragmentManager();
+                ComposeFragment fragment = new ComposeFragment();
+                fragment.setTargetFragment(HomeFragment.this, 300);
+                fragment.show(fm, "test");
             }
         });
 
@@ -108,14 +124,13 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == COMPOSE_REQUEST && resultCode == RESULT_OK) {
             Tweet tweet = Parcels.unwrap(data.getParcelableExtra("NEW_TWEET"));
             tweets.add(0, tweet);
             adapter.notifyItemInserted(0);
             rvTweets.smoothScrollToPosition(0);
         }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
 
@@ -150,6 +165,28 @@ public class HomeFragment extends Fragment {
                 adapter.clear();
                 populateTimeline();
                 swipeContainer.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.e(TAG, "OnFailure: " + throwable.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void onComposeTweet(final String tweetBody) {
+        client.publishTweet(tweetBody, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                try {
+                    Tweet newTweet = Tweet.fromJsonObject(json.jsonObject);
+                    tweets.add(0, newTweet);
+                    adapter.notifyItemInserted(0);
+                    rvTweets.smoothScrollToPosition(0);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

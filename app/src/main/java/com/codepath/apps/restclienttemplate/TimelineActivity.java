@@ -8,22 +8,27 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.codepath.apps.restclienttemplate.fragments.HomeFragment;
+import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import org.parceler.Parcels;
 
 public class TimelineActivity extends AppCompatActivity {
 
     public static final String TAG = "TimelineActivity";
-    public static final int COMPOSE_REQUEST = 55;
+    public static final int COMPOSE_REQUEST = 15;
     final FragmentManager fragmentManager = getSupportFragmentManager();
     BottomNavigationView bottomNavigationView;
     // Instance of the progress action-view
     static MenuItem miActionProgressItem;
+    Fragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +48,7 @@ public class TimelineActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment fragment = null;
+                fragment = null;
                 switch (item.getItemId()) {
                     case R.id.action_home:
                         fragment = new HomeFragment();
@@ -64,6 +69,9 @@ public class TimelineActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        fragment = new HomeFragment();
+        fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
     }
 
     @Override
@@ -74,13 +82,9 @@ public class TimelineActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.compose){
-            Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
-            startActivityForResult(i, COMPOSE_REQUEST);
-            Log.d(TAG, "ComposeClicked");
-        }
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
@@ -99,4 +103,15 @@ public class TimelineActivity extends AppCompatActivity {
         miActionProgressItem.setVisible(false);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == COMPOSE_REQUEST && resultCode == RESULT_OK) {
+            fragment = new HomeFragment();
+            Tweet tweet = Parcels.unwrap(getIntent().getParcelableExtra("NEW_TWEET"));
+            data.putExtra("NEW_TWEET", Parcels.wrap(tweet));
+            fragment.onActivityResult(COMPOSE_REQUEST, RESULT_OK, data);
+            Log.d(TAG, "OnActivityResult");
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }
