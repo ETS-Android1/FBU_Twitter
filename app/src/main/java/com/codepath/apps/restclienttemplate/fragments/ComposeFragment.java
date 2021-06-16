@@ -17,7 +17,6 @@ import androidx.fragment.app.DialogFragment;
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.NewTweetListener;
 import com.codepath.apps.restclienttemplate.R;
-import com.codepath.apps.restclienttemplate.models.User;
 
 public class ComposeFragment extends DialogFragment implements NewTweetListener {
 
@@ -75,7 +74,7 @@ public class ComposeFragment extends DialogFragment implements NewTweetListener 
         etCompose.requestFocus();
 
         Glide.with(this)
-                .load(User.currentUser.ivProfileUrl)
+                .load(ivProfile.getDrawable())
                 .circleCrop()
                 .into(ivProfile);
 
