@@ -7,12 +7,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.User;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.parceler.Parcels;
@@ -22,7 +24,7 @@ import java.util.Date;
 
 import okhttp3.Headers;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends FragmentActivity {
 
     public static final String TAG = "DetailActivity";
     Tweet tweet;
@@ -36,14 +38,16 @@ public class DetailActivity extends AppCompatActivity {
     ImageButton ibRetweet;
     ImageButton ibFavorite;
     TwitterClient client;
+    RelativeLayout container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        tweet = Parcels.unwrap(getIntent().getParcelableExtra("Tweet"));
         client = TwitterApp.getRestClient(this);
-
+        container = findViewById(R.id.container);
         tvBody = findViewById(R.id.tvBody);
         tvHandle = findViewById(R.id.tvHandle);
         tvUsername = findViewById(R.id.tvUsername);
@@ -52,6 +56,7 @@ public class DetailActivity extends AppCompatActivity {
         tvRetweets = findViewById(R.id.tvRetweets);
         tvFavorites = findViewById(R.id.tvLikes);
         ibFavorite = findViewById(R.id.ibFavorite);
+        ibRetweet = findViewById(R.id.ibRetweet);
         ibFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,11 +100,24 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-        ibRetweet = findViewById(R.id.ibRetweet);
+        // TODO: Add ability to retweet/un-retweet
+        // Set an onClickListener for the retweet button
 
-        tweet = Parcels.unwrap(getIntent().getParcelableExtra("Tweet"));
-        Log.d(TAG, "Tweet ID: " + tweet.id);
+        // TODO: Ability to see followers list
+        ivProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchFollowers();
+            }
+        });
+
         loadTweet();
+    }
+
+    private void launchFollowers() {
+        Intent i = new Intent(DetailActivity.this, ProfileActivity.class);
+        i.putExtra("id_str", tweet.user.id_str);
+        startActivity(i);
     }
 
     private void loadTweet() {
