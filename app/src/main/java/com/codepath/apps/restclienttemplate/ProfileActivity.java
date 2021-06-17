@@ -1,75 +1,71 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.FragmentManager;
+import androidx.viewpager2.widget.ViewPager2;
 
-import com.codepath.apps.restclienttemplate.Adapters.UserAdapter;
+import com.codepath.apps.restclienttemplate.Adapters.FragmentAdapter;
 import com.codepath.apps.restclienttemplate.models.User;
-import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
-
-import org.json.JSONArray;
-import org.json.JSONException;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.Headers;
-
 public class ProfileActivity extends AppCompatActivity {
 
     public static final String TAG = "ProfileActivity";
-    public String id_str;
-    RecyclerView rvUsers;
-    List<User> users;
-    UserAdapter adapter;
-    TwitterClient client;
+
+    static String id_str;
+    TabLayout tabLayout;
+    ViewPager2 viewPager2;
+    FragmentAdapter fragmentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        tabLayout = findViewById(R.id.tabLayout);
+        viewPager2 = findViewById(R.id.viewPager2);
+
         id_str = getIntent().getStringExtra("id_str");
-        rvUsers = findViewById(R.id.rvUsers);
-        client = new TwitterClient(this);
-        rvUsers = findViewById(R.id.rvUsers);
-        users = new ArrayList<>();
-        adapter = new UserAdapter(this, users);
-        rvUsers.setLayoutManager(new LinearLayoutManager(this));
-        rvUsers.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        rvUsers.setAdapter(adapter);
 
-        populateFollowers();
-    }
+        FragmentManager fm = getSupportFragmentManager();
+        List<User> users = new ArrayList<>();
+        fragmentAdapter = new FragmentAdapter(fm, getLifecycle(), this, users);
+        viewPager2.setAdapter(fragmentAdapter);
 
+        tabLayout.addTab(tabLayout.newTab().setText("Following"));
+        tabLayout.addTab(tabLayout.newTab().setText("Followers"));
 
-
-    private void populateFollowers() {
-        client.getFollowers(id_str, new JsonHttpResponseHandler() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onSuccess(int statusCode, Headers headers, JSON json) {
-                JSONArray array = null;
-                try {
-                    array = json.jsonObject.getJSONArray("users");
-                    users.addAll(User.fromJsonArray(array));
-                    adapter.addAll(users);
-                    adapter.notifyDataSetChanged();
-                    Log.d(TAG, "OnSuccess");
-                } catch (JSONException e) {
-                    Log.d(TAG, "Exception: " + e.getMessage());
-                    e.printStackTrace();
-                }
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager2.setCurrentItem(tab.getPosition());
             }
 
             @Override
-            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                Log.d(TAG, "OnFailure: " + throwable.getMessage());
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
+
+        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                tabLayout.selectTab(tabLayout.getTabAt(position));
+            }
+        });
+    }
+
+    public static String getID(){
+        return id_str;
     }
 }

@@ -8,7 +8,7 @@
     tools:context=".ComposeActivity">
 
     <ImageView
-        android:id="@+id/ivProfile"
+        android:id="@+id/rvUser"
         android:layout_width="103dp"
         android:layout_height="84dp"
         android:layout_margin="7dp"
@@ -20,7 +20,7 @@
         android:id="@+id/etComposeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ivProfile"
+        android:layout_below="@+id/rvUser"
         android:layout_marginTop="5dp"
         app:counterEnabled="true"
         app:counterMaxLength="140">

@@ -71,7 +71,7 @@ public class ComposeFragment extends DialogFragment implements NewTweetListener 
         etCompose = view.findViewById(R.id.etCompose);
         btTweet = view.findViewById(R.id.btTweet);
         btCancel = view.findViewById(R.id.btCancel);
-        ivProfile = view.findViewById(R.id.ivProfile);
+        ivProfile = view.findViewById(R.id.rvUser);
         etCompose.requestFocus();
 
         Glide.with(this)

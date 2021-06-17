@@ -8,7 +8,7 @@
     tools:context=".DetailActivity">
 
     <ImageView
-        android:id="@+id/ivProfile"
+        android:id="@+id/rvUser"
         android:layout_width="115dp"
         android:layout_height="115dp"
         android:layout_marginLeft="8dp"
@@ -25,7 +25,7 @@
         android:layout_below="@+id/tvUsername"
         android:layout_marginStart="12dp"
         android:layout_marginTop="10dp"
-        android:layout_toEndOf="@+id/ivProfile"
+        android:layout_toEndOf="@+id/rvUser"
         android:textSize="20sp"
         android:textColor="#808080"
         tools:text="\@example" />
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
-        android:layout_toEndOf="@+id/ivProfile"
+        android:layout_toEndOf="@+id/rvUser"
         android:textSize="24sp"
         android:textStyle="bold"
         tools:text="exampleUser" />
@@ -45,7 +45,7 @@
         android:id="@+id/tvBody"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ivProfile"
+        android:layout_below="@+id/rvUser"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
         android:textSize="34sp"

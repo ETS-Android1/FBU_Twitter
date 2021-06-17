@@ -14,7 +14,6 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
-import com.codepath.apps.restclienttemplate.models.User;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.parceler.Parcels;
@@ -52,7 +51,7 @@ public class DetailActivity extends FragmentActivity {
         tvHandle = findViewById(R.id.tvHandle);
         tvUsername = findViewById(R.id.tvUsername);
         tvDate = findViewById(R.id.tvDate);
-        ivProfile = findViewById(R.id.ivProfile);
+        ivProfile = findViewById(R.id.rvUser);
         tvRetweets = findViewById(R.id.tvRetweets);
         tvFavorites = findViewById(R.id.tvLikes);
         ibFavorite = findViewById(R.id.ibFavorite);

@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.models.User;
 
@@ -66,14 +67,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             tvDescription = itemView.findViewById(R.id.tvDescription);
-            tvName = itemView.findViewById(R.id.tvName);
+            tvName = itemView.findViewById(R.id.tvUsername);
             tvHandle = itemView.findViewById(R.id.tvHandle);
-            ivProfile = itemView.findViewById(R.id.ivProfile);
+            ivProfile = itemView.findViewById(R.id.rvUser);
         }
 
         public void bind(User user) {
             tvName.setText(user.username);
-            tvHandle.setText(user.handle);
+            tvHandle.setText("@" + user.handle);
             if(user.description != null) {
                 tvDescription.setText(user.description);
             }
@@ -84,6 +85,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             Glide.with(context)
                     .load(user.ivProfileUrl)
                     .fitCenter()
+                    .transform(new CircleCrop())
                     .override(250, 130)
                     .into(ivProfile);
         }
