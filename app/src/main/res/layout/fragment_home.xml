@@ -21,7 +21,8 @@
                     android:backgroundTint="@color/twitter_blue"
                     android:src="@drawable/ic_vector_compose"
                     android:tint="@android:color/white"
-                    app:layout_anchorGravity="bottom|right|end" />
+                    app:layout_anchorGravity="bottom|right|end"
+                    app:layout_behavior=".ScrollBehaviorFAB"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvTweets"
