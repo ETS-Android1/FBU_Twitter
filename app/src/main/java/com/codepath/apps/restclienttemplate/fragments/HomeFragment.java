@@ -60,13 +60,13 @@ public class HomeFragment extends Fragment implements NewTweetListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         rvTweets = view.findViewById(R.id.rvTweets);
-        swipeContainer = view.findViewById(R.id.swipeContainer);
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        /*//swipeContainer = view.findViewById(R.id.swipeContainer);
+        //swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 fetchTimelineAsync(0);
             }
-        });
+        });*/
 
         fabCompose = view.findViewById(R.id.fabCompose);
         fabCompose.setOnClickListener(new View.OnClickListener() {

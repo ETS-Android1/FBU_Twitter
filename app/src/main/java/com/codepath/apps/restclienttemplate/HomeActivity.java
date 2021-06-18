@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.codepath.apps.restclienttemplate.fragments.HomeFragment;
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -33,6 +34,7 @@ public class HomeActivity extends AppCompatActivity {
     static MenuItem miActionProgressItem;
     MenuItem mButton;
     Fragment fragment;
+    SwipeRefreshLayout swipeContainer;
 
 
     @Override
@@ -47,6 +49,15 @@ public class HomeActivity extends AppCompatActivity {
         actionBar.setDisplayUseLogoEnabled(true);
 
         miActionProgressItem = findViewById(R.id.miActionProgress);
+
+        swipeContainer = findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //fetchTimelineAsync(0);
+                Log.d(TAG, "Fetching");
+            }
+        });
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setBackgroundColor(Color.TRANSPARENT);
