@@ -8,7 +8,7 @@
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
     android:orientation="vertical"
-    tools:context=".TimelineActivity">
+    tools:context=".HomeActivity">
 
     <FrameLayout
         android:id="@+id/flContainer"
@@ -25,7 +25,7 @@
         android:layout_marginBottom="5dp"
         app:menu="@menu/menu_bottom_navigation"
         app:itemBackground="@android:color/white"
-        app:itemIconTint="@android:color/black"
-        app:itemTextColor="@android:color/black" />
+        app:itemIconTint="@color/tab_selector"
+        app:itemTextColor="@color/tab_selector" />
 
 </RelativeLayout>

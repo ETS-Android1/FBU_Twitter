@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.codepath.apps.restclienttemplate.fragments.FollowersFragment;
 import com.codepath.apps.restclienttemplate.fragments.FollowingFragment;
 import com.codepath.apps.restclienttemplate.models.User;
 
@@ -36,9 +35,9 @@ public class FragmentAdapter extends FragmentStateAdapter {
         Log.d(TAG, "Position: " + position);
         switch (position){
             case 1:
-                return new FollowersFragment(context, users);
+                return new FollowingFragment(context, users, 0);
             default:
-                return new FollowingFragment(context, users);
+                return new FollowingFragment(context, users, 1);
         }
     }
 

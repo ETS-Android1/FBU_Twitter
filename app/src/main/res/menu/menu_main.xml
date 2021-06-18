@@ -10,4 +10,10 @@
         app:showAsAction="always"
         app:actionLayout="@layout/action_view_progress" />
 
+    <item
+        android:id="@+id/miActionButtons"
+        app:showAsAction="ifRoom"
+        app:actionLayout="@layout/action_view_button"
+        android:title="Loading..." />
+
 </menu>

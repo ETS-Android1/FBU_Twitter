@@ -47,16 +47,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         return users.size();
     }
 
-    public void clear(){
-        users.clear();
-        notifyDataSetChanged();
-    }
-
-    public void addAll(List<User> users){
-        this.users.addAll(users);
-        notifyDataSetChanged();
-    }
-
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView tvName;

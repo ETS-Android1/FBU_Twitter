@@ -64,7 +64,7 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 			public void onSuccess(int statusCode, Headers headers, JSON json) {
 				try {
 					User.currentUser = User.fromJsonObject(json.jsonObject);
-					Intent i = new Intent(LoginActivity.this, TimelineActivity.class);
+					Intent i = new Intent(LoginActivity.this, HomeActivity.class);
 					startActivity(i);
 				} catch (JSONException e) {
 					e.printStackTrace();

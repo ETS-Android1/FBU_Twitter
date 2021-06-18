@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_home"
-        android:icon="@drawable/ic_home_selector"
+        android:icon="@drawable/ic_home_twitter"
         android:title="Home"
         app:showAsAction="always" />
 

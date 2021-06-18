@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.codepath.apps.restclienttemplate.Adapters.UserAdapter;
+import com.codepath.apps.restclienttemplate.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.restclienttemplate.ProfileActivity;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.TwitterApp;
@@ -34,16 +35,19 @@ import okhttp3.Headers;
 public class FollowingFragment extends Fragment {
 
     public static final String TAG = "FollowingFragment";
+    private EndlessRecyclerViewScrollListener scrollListener;
     Context context;
     RecyclerView rvUsers;
     TwitterClient client;
-    List<User> users;
+    List<User> users = new ArrayList<>();
     UserAdapter adapter;
+    long cursorId = -1;
+    int mode = 0; // 0 == "followers", 1 == "following"
 
-
-    public FollowingFragment(Context context, List<User> users) {
+    public FollowingFragment(Context context, List<User> users, int mode) {
         this.context = context;
         this.users = users;
+        this.mode = mode;
     }
 
     @Override
@@ -57,10 +61,31 @@ public class FollowingFragment extends Fragment {
         client = TwitterApp.getRestClient(context);
         adapter = new UserAdapter(context, users);
         rvUsers = view.findViewById(R.id.rvUsers);
-        rvUsers.setLayoutManager(new LinearLayoutManager(context));
+        LinearLayoutManager llm = new LinearLayoutManager(context);
+        rvUsers.setLayoutManager(llm);
         rvUsers.setAdapter(adapter);
         rvUsers.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
-        getFollowing();
+
+        scrollListener = new EndlessRecyclerViewScrollListener(llm) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                if(mode == 0) {
+                    getMoreFollowers();
+                } else if (mode == 1) {
+                    getMoreFollowing();
+                }
+            }
+        };
+
+        rvUsers.addOnScrollListener(scrollListener);
+
+        users.clear();
+        adapter.notifyDataSetChanged();
+        if(mode == 0) {
+            getMoreFollowers();
+        } else if (mode == 1) {
+            getMoreFollowing();
+        }
     }
 
     @Override
@@ -70,17 +95,15 @@ public class FollowingFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_following, container, false);
     }
 
-    public void getFollowing(){
-        adapter.clear();
-        users = new ArrayList<>();
-        client.getFriends(new JsonHttpResponseHandler() {
+    public void getMoreFollowers(){
+        client.getFollowers(cursorId, ProfileActivity.getID(), new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 JSONArray array = null;
                 try {
+                    cursorId = json.jsonObject.getLong("next_cursor");
                     array = json.jsonObject.getJSONArray("users");
                     users.addAll(User.fromJsonArray(array));
-                    adapter.addAll(users);
                     adapter.notifyDataSetChanged();
                     Log.d(TAG, "OnSuccess");
                 } catch (JSONException e) {
@@ -94,6 +117,31 @@ public class FollowingFragment extends Fragment {
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
 
             }
-        }, ProfileActivity.getID());
+        });
+    }
+
+    public void getMoreFollowing(){
+        client.getFriends(cursorId, ProfileActivity.getID(), new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                JSONArray array = null;
+                try {
+                    cursorId = json.jsonObject.getLong("next_cursor");
+                    array = json.jsonObject.getJSONArray("users");
+                    users.addAll(User.fromJsonArray(array));
+                    adapter.notifyDataSetChanged();
+                    Log.d(TAG, "OnSuccess");
+                } catch (JSONException e) {
+                    Log.d(TAG, "Exception: " + e.getMessage());
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+
+            }
+        });
     }
 }

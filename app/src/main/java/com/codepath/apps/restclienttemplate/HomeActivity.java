@@ -6,11 +6,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -20,15 +23,17 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.parceler.Parcels;
 
-public class TimelineActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
 
-    public static final String TAG = "TimelineActivity";
+    public static final String TAG = "HomeActivity";
     public static final int COMPOSE_REQUEST = 15;
     final FragmentManager fragmentManager = getSupportFragmentManager();
     BottomNavigationView bottomNavigationView;
     // Instance of the progress action-view
     static MenuItem miActionProgressItem;
+    MenuItem mButton;
     Fragment fragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +95,25 @@ public class TimelineActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         // Store instance of the menu item containing progress
         miActionProgressItem = menu.findItem(R.id.miActionProgress);
+        mButton = menu.findItem(R.id.miActionButtons);
+        View v = MenuItemCompat.getActionView(mButton);
+        Button b = (Button) v.findViewById(R.id.mButton);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                logout();
+            }
+        });
         return true;
+    }
+
+    private void logout() {
+        TwitterApp.getRestClient(this).clearAccessToken();
+        // go to login activity
+        Intent i = new Intent(HomeActivity.this, LoginActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
     }
 
     public static void showProgressBar() {
