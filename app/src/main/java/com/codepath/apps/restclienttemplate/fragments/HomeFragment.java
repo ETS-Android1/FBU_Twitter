@@ -1,6 +1,8 @@
 package com.codepath.apps.restclienttemplate.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,13 +18,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.codepath.apps.restclienttemplate.Adapters.TweetsAdapter;
 import com.codepath.apps.restclienttemplate.EndlessRecyclerViewScrollListener;
+import com.codepath.apps.restclienttemplate.HomeActivity;
 import com.codepath.apps.restclienttemplate.NewTweetListener;
 import com.codepath.apps.restclienttemplate.R;
-import com.codepath.apps.restclienttemplate.HomeActivity;
-import com.codepath.apps.restclienttemplate.Adapters.TweetsAdapter;
+import com.codepath.apps.restclienttemplate.TwitterApp;
 import com.codepath.apps.restclienttemplate.TwitterClient;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.TweetDao;
+import com.codepath.apps.restclienttemplate.models.TweetWithUser;
+import com.codepath.apps.restclienttemplate.models.User;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -41,6 +47,8 @@ public class HomeFragment extends Fragment implements NewTweetListener {
 
     public static final String TAG = "HomeFragment";
     public static final int COMPOSE_REQUEST = 55;
+    Context context;
+    TweetDao tweetDao;
     SwipeRefreshLayout swipeContainer;
     List<Tweet> tweets;
     RecyclerView rvTweets;
@@ -49,12 +57,15 @@ public class HomeFragment extends Fragment implements NewTweetListener {
     EndlessRecyclerViewScrollListener scrollListener;
     FloatingActionButton fabCompose;
 
+    public HomeFragment(Context context){
+        this.context = context;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -67,6 +78,7 @@ public class HomeFragment extends Fragment implements NewTweetListener {
                 fetchTimelineAsync(0);
             }
         });*/
+        tweetDao = ((TwitterApp) context).getMyDatabase().tweetDao();
 
         fabCompose = view.findViewById(R.id.fabCompose);
         fabCompose.setOnClickListener(new View.OnClickListener() {
@@ -80,6 +92,7 @@ public class HomeFragment extends Fragment implements NewTweetListener {
         });
 
         client = new TwitterClient(getContext());
+
         tweets = new ArrayList<>();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -96,6 +109,18 @@ public class HomeFragment extends Fragment implements NewTweetListener {
         rvTweets.setAdapter(adapter);
         rvTweets.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
         rvTweets.addOnScrollListener(scrollListener);
+
+        // Query for existing tweets
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "Showing data from database");
+                List<TweetWithUser> tweetWithUsers = tweetDao.recentItems();
+                List<Tweet> tweetsFromDB = TweetWithUser.getTweetList(tweetWithUsers);
+                adapter.clear();
+                adapter.addAll(tweetsFromDB);
+            }
+        });
 
         populateTimeline();
     }
@@ -140,8 +165,21 @@ public class HomeFragment extends Fragment implements NewTweetListener {
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 try {
                     HomeActivity.showProgressBar();
+                    final List<Tweet> tweetsFromNetwork = Tweet.fromJsonArray(json.jsonArray);
                     tweets.addAll(Tweet.fromJsonArray(json.jsonArray));
                     adapter.notifyDataSetChanged();
+                    // Query for existing tweets
+                    AsyncTask.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d(TAG, "Saving data to db");
+                            // Insert users first
+                            List<User> usersFromNetwork = User.fromTweetArray(tweetsFromNetwork);
+                            tweetDao.insertModel(usersFromNetwork.toArray(new User[0]));
+                            // Insert tweets
+                            tweetDao.insertModel(tweetsFromNetwork.toArray(new Tweet[0]));
+                        }
+                    });
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

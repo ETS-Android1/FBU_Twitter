@@ -67,16 +67,16 @@ public class HomeActivity extends AppCompatActivity {
                 fragment = null;
                 switch (item.getItemId()) {
                     case R.id.action_home:
-                        fragment = new HomeFragment();
+                        fragment = new HomeFragment(getApplicationContext());
                         break;
                     case R.id.action_search:
-                        fragment = new HomeFragment();
+                        //fragment = new HomeFragment();
                         break;
                     case R.id.action_notifications:
-                        fragment = new HomeFragment();
+                        //fragment = new HomeFragment();
                         break;
                     case R.id.action_direct_messages:
-                        fragment = new HomeFragment();
+                        //fragment = new HomeFragment();
                         break;
                     default:
                         break;
@@ -86,7 +86,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        fragment = new HomeFragment();
+        fragment = new HomeFragment(getApplicationContext());
         fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
     }
 
@@ -140,7 +140,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == COMPOSE_REQUEST && resultCode == RESULT_OK) {
-            fragment = new HomeFragment();
+            fragment = new HomeFragment(getApplicationContext());
             Tweet tweet = Parcels.unwrap(getIntent().getParcelableExtra("NEW_TWEET"));
             data.putExtra("NEW_TWEET", Parcels.wrap(tweet));
             fragment.onActivityResult(COMPOSE_REQUEST, RESULT_OK, data);

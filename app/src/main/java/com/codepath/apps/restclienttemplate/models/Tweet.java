@@ -2,6 +2,12 @@ package com.codepath.apps.restclienttemplate.models;
 
 import android.util.Log;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 @Parcel
+@Entity(foreignKeys = @ForeignKey(entity=User.class, parentColumns="id_str", childColumns="userId"))
 public class Tweet {
 
     private static final int SECOND_MILLIS = 1000;
@@ -21,15 +28,28 @@ public class Tweet {
     private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
     private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
 
-    public String body;
-    public String createdAt;
-    public User user;
-    public String mediaUrl;
+    @ColumnInfo
+    @PrimaryKey
     public long id;
+
+    @ColumnInfo
+    public String body;
+    @ColumnInfo
+    public String createdAt;
+    @ColumnInfo
+    public String mediaUrl;
+    @ColumnInfo
     public int retweets;
+    @ColumnInfo
     public int favorites;
+    @ColumnInfo
     public boolean favoriteStatus;
+    @ColumnInfo
     public boolean retweetStatus;
+    @ColumnInfo
+    public String userId;
+    @Ignore
+    public User user;
 
     public Tweet(){
 
@@ -45,6 +65,7 @@ public class Tweet {
         tweet.retweetStatus = object.getBoolean("retweeted");
         tweet.favorites = object.getInt("favorite_count");
         tweet.favoriteStatus = object.getBoolean("favorited");
+        tweet.userId = tweet.user.id_str;
 
         if(!object.isNull("extended_entities")){
             JSONObject extendedEntitites = object.getJSONObject("extended_entities");
