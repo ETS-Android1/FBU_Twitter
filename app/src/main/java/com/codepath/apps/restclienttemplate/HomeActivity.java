@@ -35,7 +35,7 @@ public class HomeActivity extends AppCompatActivity {
     MenuItem mButton;
     Fragment fragment;
     SwipeRefreshLayout swipeContainer;
-
+    TwitterClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,16 +48,9 @@ public class HomeActivity extends AppCompatActivity {
         actionBar.setIcon(R.drawable.ic_twitter_bird);
         actionBar.setDisplayUseLogoEnabled(true);
 
-        miActionProgressItem = findViewById(R.id.miActionProgress);
+        client = TwitterApp.getRestClient(this);
 
-        swipeContainer = findViewById(R.id.swipeContainer);
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                //fetchTimelineAsync(0);
-                Log.d(TAG, "Fetching");
-            }
-        });
+        miActionProgressItem = findViewById(R.id.miActionProgress);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setBackgroundColor(Color.TRANSPARENT);
@@ -70,13 +63,13 @@ public class HomeActivity extends AppCompatActivity {
                         fragment = new HomeFragment(getApplicationContext());
                         break;
                     case R.id.action_search:
-                        //fragment = new HomeFragment();
+                        fragment = new HomeFragment(getApplicationContext());
                         break;
                     case R.id.action_notifications:
-                        //fragment = new HomeFragment();
+                        fragment = new HomeFragment(getApplicationContext());
                         break;
                     case R.id.action_direct_messages:
-                        //fragment = new HomeFragment();
+                        fragment = new HomeFragment(getApplicationContext());
                         break;
                     default:
                         break;
@@ -120,8 +113,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void logout() {
         TwitterApp.getRestClient(this).clearAccessToken();
-        // go to login activity
-        Intent i = new Intent(HomeActivity.this, LoginActivity.class);
+        Intent i = new Intent(this, LoginActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);

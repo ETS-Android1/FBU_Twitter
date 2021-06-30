@@ -57,12 +57,11 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
     public void clear(){
         tweets.clear();
-        notifyDataSetChanged();
     }
 
     public void addAll(List<Tweet> tweets){
         this.tweets.addAll(tweets);
-        notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -92,10 +91,11 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             ibReply = itemView.findViewById(R.id.ibReply);
         }
 
-        public void bind(final Tweet tweet) {
+        public void bind(Tweet tweet) {
             tvUsername.setText(tweet.user.username);
             tvBody.setText(tweet.body);
             tvHandle.setText("@" + tweet.user.handle);
+
             Glide.with(context)
                     .load(tweet.user.ivProfileUrl)
                     .fitCenter()
@@ -104,6 +104,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvTimestamp.setText("- " + Tweet.getRelativeTimeAgo(tweet.createdAt));
 
             if(tweet.mediaUrl != ""){
+                ivUrl.setVisibility(View.VISIBLE);
                 Glide.with(context)
                         .load(tweet.mediaUrl)
                         .transform(new RoundedCorners(30))

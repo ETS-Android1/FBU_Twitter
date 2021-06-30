@@ -66,6 +66,7 @@ public class Tweet {
         tweet.favorites = object.getInt("favorite_count");
         tweet.favoriteStatus = object.getBoolean("favorited");
         tweet.userId = tweet.user.id_str;
+        tweet.mediaUrl = null;
 
         if(!object.isNull("extended_entities")){
             JSONObject extendedEntitites = object.getJSONObject("extended_entities");

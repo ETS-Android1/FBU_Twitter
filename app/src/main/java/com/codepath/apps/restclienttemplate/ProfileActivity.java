@@ -32,6 +32,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         id_str = getIntent().getStringExtra("id_str");
 
+
         FragmentManager fm = getSupportFragmentManager();
         List<User> users = new ArrayList<>();
         fragmentAdapter = new FragmentAdapter(fm, getLifecycle(), this, users);

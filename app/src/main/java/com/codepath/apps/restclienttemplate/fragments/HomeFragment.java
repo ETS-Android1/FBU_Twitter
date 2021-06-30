@@ -71,14 +71,16 @@ public class HomeFragment extends Fragment implements NewTweetListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         rvTweets = view.findViewById(R.id.rvTweets);
-        /*//swipeContainer = view.findViewById(R.id.swipeContainer);
-        //swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        tweetDao = ((TwitterApp) context).getMyDatabase().tweetDao();
+
+        swipeContainer = view.findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 fetchTimelineAsync(0);
+                Log.d(TAG, "Fetching");
             }
-        });*/
-        tweetDao = ((TwitterApp) context).getMyDatabase().tweetDao();
+        });
 
         fabCompose = view.findViewById(R.id.fabCompose);
         fabCompose.setOnClickListener(new View.OnClickListener() {
@@ -200,8 +202,13 @@ public class HomeFragment extends Fragment implements NewTweetListener {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
-                adapter.clear();
-                populateTimeline();
+                try {
+                    adapter.clear();
+                    adapter.addAll(Tweet.fromJsonArray(json.jsonArray));
+                    adapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 swipeContainer.setRefreshing(false);
             }
 
