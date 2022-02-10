@@ -12,14 +12,7 @@ The following **required** functionality is completed:
 * [X]	User can **view tweets from their home timeline**
   * [X] User is displayed the username, name, and body for each tweet
   * [X] User is displayed the [relative timestamp](https://gist.github.com/nesquena/f786232f5ef72f6e10a7) for each tweet "8m", "7h"
-* [X] User can **compose and post a new tweet**
-  * [X] User can click a “Compose” icon in the Action Bar on the top right
-  * [X] User can then enter a new tweet and post this to Twitter
-  * [X] User is taken back to home timeline with **new tweet visible** in timeline
-  * [X] Newly created tweet should be manually inserted into the timeline and not rely on a full refresh
-* [X] User can **see a counter with total number of characters left for tweet** on compose tweet page
 * [X] User can **pull down to refresh tweets timeline**
-* [X] User can **see embedded image media within a tweet** on list or detail view.
 
 The following **stretch** features are implemented:
 
@@ -37,7 +30,13 @@ The following **stretch** features are implemented:
 * [X] Use the View Binding library to reduce view boilerplate.
 * [X] On the Twitter timeline, apply scrolling effects such as [hiding/showing the toolbar](http://guides.codepath.org/android/Using-the-App-ToolBar#reacting-to-scroll) by implementing [CoordinatorLayout](http://guides.codepath.org/android/Handling-Scrolls-with-CoordinatorLayout#responding-to-scroll-events).
 * [X] User can **open the twitter app offline and see last loaded tweets**. Persisted in SQLite tweets are refreshed on every application launch. While "live data" is displayed when app can get it from Twitter API, it is also saved for use in offline mode.
-
+* [X] User can **see embedded image media within a tweet** on list or detail view.
+* [X] User can **compose and post a new tweet**
+  * [X] User can click a “Compose” icon in the Action Bar on the top right
+  * [X] User can then enter a new tweet and post this to Twitter
+  * [X] User is taken back to home timeline with **new tweet visible** in timeline
+  * [X] Newly created tweet should be manually inserted into the timeline and not rely on a full refresh
+* [X] User can **see a counter with total number of characters left for tweet** on compose tweet page
 The following **additional** features are implemented:
 
 * [ ] List anything else that you can get done to improve the app functionality!
